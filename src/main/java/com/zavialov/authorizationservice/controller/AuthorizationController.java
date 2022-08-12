@@ -10,12 +10,16 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-@RestController
 @Validated
+@RestController
 public class AuthorizationController {
     AuthorizationService service = new AuthorizationService();
+    LocalDateTime dateTime = LocalDateTime.now();
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy  HH:mm:ss  ");
 
     @GetMapping("/authorize")
     public List<Authorities> getAuthorities(@Valid Users user) {
@@ -31,6 +35,8 @@ public class AuthorizationController {
     @ExceptionHandler(UnauthorizedUser.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     String resolveUnauthorizedUser (UnauthorizedUser exception) {
+
+        System.out.println(dateTime.format(formatter) + exception.getMessage());
         return exception.getMessage();
     }
 }
